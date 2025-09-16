@@ -1,4 +1,4 @@
-# ProcesionArduino
+# ProcessionArduino
 
 Simple Arduino library for interacting with Spatial Pixel's "Procession" app.
 
@@ -17,3 +17,5 @@ Used for connecting an Arduino-based microcontroller to Procession via a USB
 port. Provides simple `send()` and `receive()` methods for sending values to
 and receiving values from a particular topic on the pubsub system in a Procession
 sketch.
+
+See the example for a simple implementation.
