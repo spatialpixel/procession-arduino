@@ -18,12 +18,21 @@ public:
    * @param topic  String describing the topic being sent sending.
    * @param value  Value associated with the topic.
    */
-  void send(const String &topic, const String &value);
+  void publish(const String &topic, const String &value);
 
   /**
    * @brief Reads messages from Procession.
    */
   String receive();
+
+  void loop();
+
+  String subscribe(const String& topic);
+
+private:
+  String _receivedMessage;
+  String _receivedTopic;
+  String _receivedValue;
 };
 
 #endif // PROCESSION_ARDUINO_H

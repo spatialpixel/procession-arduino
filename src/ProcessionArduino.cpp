@@ -2,7 +2,7 @@
 #include <ProcessionArduino.h>
 
 
-ProcessionArduino::ProcessionArduino() {
+ProcessionArduino::ProcessionArduino() : _receivedMessage(""), _receivedTopic(""), _receivedValue("") {
 
 }
 
@@ -13,7 +13,7 @@ ProcessionArduino::~ProcessionArduino() {
 /* -----------------------------------------------------------------
    send
    ----------------------------------------------------------------- */
-void ProcessionArduino::send(const String &topic,
+void ProcessionArduino::publish(const String &topic,
                              const String &value) {
     if (!Serial) { return; }
 
@@ -22,11 +22,29 @@ void ProcessionArduino::send(const String &topic,
     Serial.flush();
 }
 
-String ProcessionArduino::receive() {
+void ProcessionArduino::loop() {
   if (!Serial || Serial.available() == 0) {
-    return String();
+    _receivedTopic = "";
+    _receivedValue = "";
+    return;
   }
 
   String inputStr = Serial.readStringUntil('\n');
-  return ProcessionUtil::processProcessionMessage(inputStr);
+
+  _receivedMessage = ProcessionUtil::processProcessionMessage(inputStr);
+  _receivedMessage.trim();
+
+  bool parseSuccessful = ProcessionUtil::parseTopicValue(_receivedMessage, _receivedTopic, _receivedValue);
+  if (!parseSuccessful) {
+    _receivedTopic = "";
+    _receivedValue = "";
+  }
+}
+
+String ProcessionArduino::subscribe(const String& topic) {
+  if (topic == _receivedTopic) {
+    return _receivedValue;
+  } else {
+    return String();
+  }
 }
